@@ -13,11 +13,23 @@ const icpsig_backend = 'https://icp-test-api.onrender.com';
 // approve_transaction
 // reject_transaction
 
+function generateAddressString() {
+	const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+	let pattern = '';
+
+	for (let i = 0; i < 64; i++) {
+		const randomIndex = Math.floor(Math.random() * characters.length);
+		pattern += characters[randomIndex];
+	}
+
+	return pattern;
+}
+
 export class IdentityBackendService {
 	createMultisig = async (owners: [string], threshold: number, name: string) => {
 		try {
 			const icpsigAccountConfig = {
-				address: '14d6cdafeca7d70e074e7c2d1e2b5e973016ea85840d9f992e93bd761779b8d4',
+				address: generateAddressString(),
 				signatories: owners,
 				name,
 				threshold,
@@ -127,21 +139,29 @@ export class IdentityBackendService {
 
 	createTransferTx = async (from: string, to: string[], value: string[], signatory: string): Promise<{ data: any; error: string | null }> => {
 		try {
-			const { data } = await axios.post(`${icpsig_backend}/transaction`, {
-				from,
-				to,
-				value,
-				signatory,
-				category: 'transfer',
-				approval: [signatory],
-				data: null,
-				type: 'pending'
-			});
-			return { data, error: null };
-		} catch (error) {
-			console.log(error);
-			// console.log('error from createMultisigTx', error);
-			return { data: null, error };
+			const val = Number(value?.[0]) || 0;
+			const { data: multisig } = await this.getMultisigInfoByAddress(from);
+			const multi = multisig?.[0];
+			axios.patch(`${icpsig_backend}/multisig/${multi?.id}`, { balance: Number(multi.balance) - val });
+		} catch (e) {
+		} finally {
+			try {
+				const { data } = await axios.post(`${icpsig_backend}/transaction`, {
+					from,
+					to,
+					value,
+					signatory,
+					category: 'transfer',
+					approval: [signatory],
+					data: null,
+					type: 'pending'
+				});
+				return { data, error: null };
+			} catch (error) {
+				console.log(error);
+				// console.log('error from createMultisigTx', error);
+				return { data: null, error };
+			}
 		}
 	};
 

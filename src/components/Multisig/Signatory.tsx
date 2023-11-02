@@ -213,7 +213,7 @@ const Signatory = ({ filterAddress, setSignatories, signatories, homepage }: ISi
 							// </Button>
 							// </Tooltip>
 							<>
-								<div className='text-sm text-text_secondary'>Addresses imported directly from your Polkadot.js wallet</div>
+								<div className='text-sm text-text_secondary'>Drag and drop the address</div>
 								{walletAccounts
 									.filter((item: string) => item !== address)
 									.map((account: string, i: number) => (

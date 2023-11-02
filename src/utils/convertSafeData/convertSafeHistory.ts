@@ -17,6 +17,8 @@ export interface IHistoryTransactions {
 	type: string;
 	executor: string;
 	from: string;
+	category?: string;
+	value?: [string];
 }
 export const convertSafeHistoryData = (data: any) => {
 	const convertedData: IHistoryTransactions = {
