@@ -147,16 +147,16 @@ export type ChainPropType = {
 };
 
 export interface TokenProperties {
-	symbol: string,
-	canisterId: string,
-	name: string,
-	decimals: number,
-	standard: string,
-	fee: number,
-	amount: number,
-	logo: string,
-	priceChange: number | null,
-	error: boolean
+	symbol: string;
+	canisterId: string;
+	name: string;
+	decimals: number;
+	standard: string;
+	fee: number;
+	amount: number;
+	logo: string;
+	priceChange: number | null;
+	error: boolean;
 }
 
 export interface IAddressBookItem {
@@ -231,6 +231,7 @@ export interface IQueueItem {
 export interface ITransaction {
 	callData?: string;
 	callHash: string;
+	category?: string;
 	created_at: any;
 	block_number: number;
 	from: string;

@@ -141,7 +141,7 @@ const Queued: FC<IQueued> = ({ loading, setLoading, refetch, setRefetch }) => {
 										setQueuedTransactions={setQueuedTransactions}
 										date={transaction.created_at}
 										status={transaction.isExecuted ? 'Executed' : 'Approval'}
-										approvals={transaction.signatures ? transaction.signatures.map((item: any) => item.address) : []}
+										approvals={transaction.approval ? transaction.approval.map((address: string) => address) : []}
 										threshold={activeMultisigData?.threshold || 0}
 										callData={transaction.data}
 										callHash={transaction.txHash}
@@ -151,7 +151,7 @@ const Queued: FC<IQueued> = ({ loading, setLoading, refetch, setRefetch }) => {
 										onAfterExecute={handleAfterExecute}
 										numberOfTransactions={queuedTransactions.length || 0}
 										notifications={transaction?.notifications || {}}
-										txType={transaction.type}
+										txType={transaction.category}
 										recipientAddress={transaction.to}
 									/>
 								</section>

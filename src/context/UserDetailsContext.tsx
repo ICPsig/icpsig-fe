@@ -293,7 +293,6 @@ export const UserDetailsProvider = ({ children }: React.PropsWithChildren<{}>) =
 		setIdentityBackend(identityService);
 		const { data: userData, error: connectAddressErr } = await identityService.getAllMultisigByOwner(address || '');
 		const { data: addressBook } = await identityService.getAddressBookOwner(address || '');
-		console.log(userData);
 		if (!connectAddressErr && userData) {
 			setUserDetailsContextState((prevState) => {
 				return {
@@ -317,7 +316,7 @@ export const UserDetailsProvider = ({ children }: React.PropsWithChildren<{}>) =
 	}, []);
 
 	const updateCurrentMultisigData = useCallback(async () => {
-		if (!userDetailsContextState.activeMultisig || !userDetailsContextState.multisigAddresses || !userDetailsContextState.address) {
+		if (!userDetailsContextState.activeMultisig || !userDetailsContextState.multisigAddresses) {
 			return;
 		}
 		try {
@@ -330,7 +329,7 @@ export const UserDetailsProvider = ({ children }: React.PropsWithChildren<{}>) =
 				return;
 			}
 			const { data: multiData } = await identityBackend.getMultisigInfoByAddress(userDetailsContextState.activeMultisig);
-			setActiveMultisigData({ ...multiData });
+			setActiveMultisigData(multiData?.[0]);
 		} catch (err) {
 			console.log('err from update current multisig data', err);
 		}
@@ -364,7 +363,7 @@ export const UserDetailsProvider = ({ children }: React.PropsWithChildren<{}>) =
 		}
 		updateCurrentMultisigData();
 	}, [updateCurrentMultisigData, userDetailsContextState.activeMultisig]);
-
+	console.log(activeMultisigData);
 	return (
 		<UserDetailsContext.Provider
 			value={{

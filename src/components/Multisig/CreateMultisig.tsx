@@ -180,7 +180,7 @@ const CreateMultisig: React.FC<IMultisigProps> = ({ onCancel, homepage = false }
 		return (
 			<>
 				<PrimaryButton
-					disabled={!addAddress || !isValidWeb3Address(addAddress) || Object.keys(records).includes(addAddress) || addressBook.some((item) => item.address === addAddress)}
+					disabled={!addAddress || Object.keys(records).includes(addAddress) || addressBook.some((item) => item.address === addAddress)}
 					onClick={() => setShowAddressModal(true)}
 				>
 					<p className='font-normal text-sm'>Add</p>

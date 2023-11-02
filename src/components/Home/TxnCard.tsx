@@ -31,8 +31,8 @@ const TxnCard = () => {
 		try {
 			const identityCompletedData = (await identityBackend.getTransactionHistory(activeMultisig)).data;
 			const identityData = (await identityBackend.getPendingTx(activeMultisig)).data;
-			setQueuedTransactions(identityData.data);
-			setCompletedTransactions(identityCompletedData.data);
+			setQueuedTransactions(identityData);
+			setCompletedTransactions(identityCompletedData);
 		} catch (e) {
 			console.log(e);
 		} finally {
@@ -68,38 +68,36 @@ const TxnCard = () => {
 						{loading ? (
 							<Loader size='large' />
 						) : queuedTransactions && queuedTransactions.length > 0 ? (
-							queuedTransactions
-								.filter((_: any, i: number) => i < 10)
-								.map((transaction: any, i: any) => {
-									const tx = transaction as any;
-									return (
-										<Link
-											to={`/transactions?tab=Queue#${transaction.txHash}`}
-											key={i}
-											className='flex items-center pb-2 mb-2'
-										>
-											<div className='flex flex-1 items-center'>
-												<div className='bg-[#FF79F2] text-[#FF79F2] bg-opacity-10 rounded-lg h-[38px] w-[38px] flex items-center justify-center'>
-													<ArrowUpRightIcon />
-												</div>
-												<div className='ml-3'>
-													<h1 className='text-md text-white'>
-														<span>Txn: {shortenAddress(tx.txHash)}</span>
-													</h1>
-													<p className='text-text_secondary text-xs'>In Process...</p>
-												</div>
+							queuedTransactions.map((transaction: any, i: any) => {
+								const tx = transaction as any;
+								return (
+									<Link
+										to={`/transactions?tab=Queue#${transaction.txHash}`}
+										key={i}
+										className='flex items-center pb-2 mb-2'
+									>
+										<div className='flex flex-1 items-center'>
+											<div className='bg-[#FF79F2] text-[#FF79F2] bg-opacity-10 rounded-lg h-[38px] w-[38px] flex items-center justify-center'>
+												<ArrowUpRightIcon />
 											</div>
+											<div className='ml-3'>
+												<h1 className='text-md text-white'>
+													<span>Txn: {shortenAddress(tx.txHash)}</span>
+												</h1>
+												<p className='text-text_secondary text-xs'>In Process...</p>
+											</div>
+										</div>
 
-											<div>
-												<h1 className='text-md text-white'>{tx.amount_token}</h1>
-											</div>
+										<div>
+											<h1 className='text-md text-white'>{tx.amount_token}</h1>
+										</div>
 
-											<div className='flex justify-center items-center h-full px-2 text-text_secondary'>
-												<ArrowRightOutlined />
-											</div>
-										</Link>
-									);
-								})
+										<div className='flex justify-center items-center h-full px-2 text-text_secondary'>
+											<ArrowRightOutlined />
+										</div>
+									</Link>
+								);
+							})
 						) : (
 							<div className={'flex flex-col gap-y-5 items-center justify-center'}>
 								<img
@@ -168,11 +166,11 @@ const TxnCard = () => {
 												<div>
 													<h1 className='text-md text-white'>
 														<span>
-															{transaction.type === 'addOwnerWithThreshold' ? (
+															{transaction.category === 'addOwner' ? (
 																'Added Owner'
-															) : transaction.type === 'removeOwner' ? (
+															) : transaction.category === 'removeOwner' ? (
 																'Removed Owner'
-															) : transaction.type === 'multiSend' ? (
+															) : transaction.category === 'transfer' ? (
 																<>To: {batchCallRecipients.map((a, i) => `${a}${i !== batchCallRecipients?.length - 1 ? ', ' : ''}`)}</>
 															) : transaction.to ? (
 																<>To: {toText}</>
@@ -186,12 +184,12 @@ const TxnCard = () => {
 												</div>
 											</div>
 											<div>
-												{transaction.type === 'addOwnerWithThreshold' || transaction.type === 'removeOwner' ? (
+												{transaction.type === 'addOwner' || transaction.type === 'removeOwner' ? (
 													<span className='text-md text-white'>-?</span>
 												) : sent ? (
-													<h1 className='text-md text-failure'>-{transaction.amount_token?.toString()}</h1>
+													<h1 className='text-md text-failure'>-{(transaction.value?.[0] || 0)?.toString()}</h1>
 												) : (
-													<h1 className='text-md text-success'>+{transaction.amount_token?.toString()}</h1>
+													<h1 className='text-md text-success'>+{(transaction.value?.[0] || 0)?.toString()}</h1>
 												)}
 											</div>
 											<div className='flex justify-center items-center h-full px-2 text-text_secondary'>

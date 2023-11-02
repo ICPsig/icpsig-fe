@@ -41,7 +41,7 @@ interface ISendFundsFormProps {
 }
 
 const SendFundsForm = ({ className, onCancel, defaultSelectedAddress, setNewTxn }: ISendFundsFormProps) => {
-	const { activeMultisig, addressBook, address, identityBackend, multisigAddresses, transactionFields, activeMultisigData } = useGlobalUserDetailsContext();
+	const { activeMultisig, addressBook, address, identityBackend, setActiveMultisigData, transactionFields, activeMultisigData } = useGlobalUserDetailsContext();
 	const { records } = useActiveMultisigContext();
 
 	const [note, setNote] = useState<string>('');
@@ -175,6 +175,11 @@ const SendFundsForm = ({ className, onCancel, defaultSelectedAddress, setNewTxn 
 			const multisigValutTx = (await identityBackend.createTransferTx(activeMultisig, recipients, amounts, address)).data;
 
 			if (multisigValutTx) {
+				console.log(amount);
+				setActiveMultisigData((prev: any) => {
+					console.log(prev.balance);
+					return { ...prev, balance: Number(prev?.balance || 0) - Number(amount || 0) };
+				});
 				queueNotification({
 					header: 'Success',
 					message: 'New Transaction Created.',

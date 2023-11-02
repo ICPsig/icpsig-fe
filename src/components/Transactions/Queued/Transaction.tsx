@@ -202,14 +202,14 @@ const Transaction: FC<ITransactionProps> = ({ approvals, callData, callHash, dat
 								<p className='col-span-3 flex items-center gap-x-3'>
 									<span
 										className={`flex items-center justify-center w-9 h-9 ${
-											txType === 'addOwnerWithThreshold' || txType === 'removeOwner' ? 'bg-[#FF79F2] text-[#FF79F2]' : 'bg-success text-red-500'
+											txType === 'addOwner' || txType === 'removeOwner' ? 'bg-[#FF79F2] text-[#FF79F2]' : 'bg-success text-red-500'
 										} bg-opacity-10 p-[10px] rounded-lg`}
 									>
 										<ArrowUpRightIcon />
 									</span>
 
 									<span>
-										{txType === 'addOwnerWithThreshold'
+										{txType === 'addOwner'
 											? 'Adding New Owner'
 											: txType === 'removeOwner'
 											? 'Removing Owner'
@@ -218,7 +218,7 @@ const Transaction: FC<ITransactionProps> = ({ approvals, callData, callHash, dat
 											: 'Custom Transaction'}
 									</span>
 								</p>
-								{!(txType === 'addOwnerWithThreshold' || txType === 'removeOwner') && (
+								{!(txType === 'addOwner' || txType === 'removeOwner') && (
 									<p className='col-span-2 flex items-center gap-x-[6px]'>
 										{/* <ParachainIcon src={chainProperties[network].logo} /> */}
 										<span className={'font-normal text-xs leading-[13px] text-failure'}>
@@ -227,7 +227,7 @@ const Transaction: FC<ITransactionProps> = ({ approvals, callData, callHash, dat
 									</p>
 								)}
 								<p className='col-span-2'>{dayjs(date).format('lll')}</p>
-								<p className={`${txType === 'addOwnerWithThreshold' || txType === 'removeOwner' ? 'col-span-4' : 'col-span-2'} flex items-center justify-end gap-x-4`}>
+								<p className={`${txType === 'addOw' || txType === 'removeOwner' ? 'col-span-4' : 'col-span-2'} flex items-center justify-end gap-x-4`}>
 									<span className='text-waiting'>
 										{!approvals.includes(address) && 'Awaiting your Confirmation'} ({approvals.length}/{threshold})
 									</span>
